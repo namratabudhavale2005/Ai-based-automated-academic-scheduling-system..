@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Based Academic Scheduling System</title>
+
+<style>
+:root {
+  --primary: #6d4aff;
+  --dark: #201747;
+  --bg: #f6f7fc;
+  --muted: #85869c;
+  --border: #e9e8f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #292644;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 245px;
+  flex-shrink: 0;
+  background: white;
+  border-right: 1px solid var(--border);
+  padding: 28px 17px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 9px 34px;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.brand-icon {
+  background: linear-gradient(135deg, #7957ff, #b26cff);
+  color: white;
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 21px;
+}
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: #a4a2b7;
+  padding: 10px 12px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 12px;
+  margin: 3px 0;
+  border-radius: 10px;
+  color: #77758e;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.nav span:first-child {
+  width: 20px;
+  text-align: center;
+  font-size: 17px;
+}
+
+.nav.active,
+.nav:hover {
+  background: #f0ecff;
+  color: var(--primary);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 16px 13px;
+  background: #f6f3ff;
+  border-radius: 13px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #79738f;
+}
+
+/* MAIN DASHBOARD */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 27px 34px 40px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.breadcrumb strong {
+  color: var(--dark);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  background: #e9e2ff;
+  color: #6945e8;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+/* HERO */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 33px 34px;
+  background: linear-gradient(115deg, #35216e, #6545d8 65%, #9870f6);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 610px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  color: #ded3ff;
+}
+
+.hero h1 {
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.17;
+  margin: 15px 0 12px;
+  letter-spacing: -1px;
+}
+
+.hero p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #e6ddff;
+  max-width: 510px;
+  margin-bottom: 23px;
+}
+
+.primary-btn {
+  background: white;
+  color: #5836c8;
+  border: 0;
+  border-radius: 9px;
+  padding: 13px 18px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero-mark {
+  width: 125px;
+  height: 125px;
+  flex-shrink: 0;
+  border-radius: 30px;
+  background: #ffffff16;
+  border: 1px solid #ffffff35;
+  display: grid;
+  place-items: center;
+  font-size: 65px;
+  transform: rotate(7deg);
+}
+
+/* STATISTICS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin: 21px 0 31px;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 18px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+
+.stat-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.purple { background: #eee8ff; color: #704aff; }
+.blue { background: #e4f2ff; color: #3285db; }
+.green { background: #e1f8ec; color: #1b9d63; }
+.orange { background: #fff0df; color: #e49337; }
+
+.stat small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.stat strong {
+  font-size: 24px;
+}
+
+/* SUBJECTS */
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 31px 0 17px;
+}
+
+h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.section-head p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 7px 0 0;
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.subject {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 17px;
+  min-width: 0;
+  transition: 0.2s;
+}
+
+.subject:hover {
+  border-color: #c7b9ff;
+  box-shadow: 0 8px 24px #30205d0c;
+}
+
+.subject-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.subject-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.count {
+  font-size: 10px;
+  color: #7e60df;
+  background: #f0ebff;
+  padding: 6px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.subject h3 {
+  font-size: 14px;
+  margin: 15px 0 7px;
+  line-height: 1.4;
+}
+
+.subject p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.subject-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f0eff6;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8b89a0;
+}
+
+.subject-footer b {
+  color: #45405e;
+}
+
+/* GENERATOR */
+
+.control-panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.control-copy strong {
+  font-size: 13px;
+}
+
+.control-copy p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  border: 1px solid var(--border);
+  background: white;
+  color: #504b69;
+  border-radius: 9px;
+  padding: 11px 14px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.action-btn.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #15945c;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 17px 0;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #27bf7b;
+}
+
+.notice {
+  display: none;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  background: #e5f8ee;
+  color: #167449;
+}
+
+/* TIMETABLE */
+
+.table-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 790px;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: #faf9fe;
+  color: #85829c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 16px 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+thead th:first-child {
+  text-align: left;
+  padding-left: 18px;
+  width: 130px;
+}
+
+tbody td {
+  padding: 10px 7px;
+  text-align: center;
+  border-bottom: 1px solid #f0eff6;
+  border-right: 1px solid #f3f2f8;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody td:first-child {
+  text-align: left;
+  padding-left: 18px;
+  color: #514c6d;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+tbody td:last-child {
+  border-right: 0;
+}
+
+.lesson {
+  border-radius: 8px;
+  padding: 10px 5px;
+  min-height: 58px;
+}
+
+.lesson strong {
+  font-size: 10px;
+  line-height: 1.4;
+  display: block;
+}
+
+.lesson small {
+  display: block;
+  font-size: 9px;
+  margin-top: 5px;
+}
+
+.c1 { background: #eae7ff; color: #5b45c8; }
+.c2 { background: #e3f2ff; color: #2676b8; }
+.c3 { background: #e0f7ed; color: #18875b; }
+.c4 { background: #fff0dd; color: #a9691d; }
+.c5 { background: #ffe8f0; color: #ba4c79; }
+.c6 { background: #e6edf7; color: #4b648e; }
+
+.empty {
+  padding: 34px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+footer {
+  text-align: center;
+  color: #a09db2;
+  font-size: 11px;
+  padding: 30px 0 0;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+  .sidebar { width: 205px; }
+  .main { padding: 24px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .subject-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-mark { width: 90px; height: 90px; font-size: 45px; }
+}
+
+@media (max-width: 650px) {
+  .sidebar { width: 64px; padding: 20px 8px; }
+  .brand { padding: 0 4px 25px; }
+  .brand-text, .nav-label, .nav-text, .sidebar-bottom { display: none; }
+  .nav { justify-content: center; padding: 13px 4px; }
+  .nav span:first-child { font-size: 20px; }
+  .main { padding: 18px 12px; }
+  .topbar { margin-bottom: 20px; }
+  .hero { padding: 25px 20px; }
+  .hero-mark { display: none; }
+  .stats { gap: 9px; }
+  .stat { padding: 12px; gap: 9px; }
+  .stat-icon { width: 34px; height: 34px; }
+  .stat strong { font-size: 21px; }
+  .subject-grid { grid-template-columns: 1fr; }
+  .control-panel { padding: 15px; }
+  .section-head { align-items: flex-start; }
+}
+
+@media print {
+  .sidebar, .topbar, .hero, .stats,
+  .subjects-section, .control-panel,
+  .no-print, footer { display: none !important; }
+
+  .main { padding: 0; }
+  .table-box { border: 0; }
+  table { min-width: 0; }
+  thead th, tbody td { padding: 6px 3px; }
+  .lesson { padding: 5px 2px; min-height: 0; }
+  .lesson strong { font-size: 8px; }
+  .lesson small { font-size: 7px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">✳</div>
+    <span class="brand-text">Schedul<span style="color:#805cff">AI</span></span>
+  </div>
+
+  <div class="nav-label">WORKSPACE</div>
+
+  <a class="nav active" href="#dashboard">
+    <span>▦</span><span class="nav-text">Dashboard</span>
+  </a>
+
+  <a class="nav" href="#subjects">
+    <span>◈</span><span class="nav-text">Subjects & Faculty</span>
+  </a>
+
+  <a class="nav" href="#timetable">
+    <span>▤</span><span class="nav-text">Weekly Timetable</span>
+  </a>
+
+  <div class="nav-label" style="margin-top:20px">SYSTEM</div>
+
+  <a class="nav" href="#generator">
+    <span>✧</span><span class="nav-text">Smart Generator</span>
+  </a>
+
+  <div class="sidebar-bottom">
+    <b>✦ Smart Scheduling</b><br>
+    Build organized weekly class timetables with constraint-based scheduling.
+  </div>
+</aside>
+
+<main class="main" id="dashboard">
+
+  <div class="topbar">
+    <div class="breadcrumb">
+      Workspace / <strong>Dashboard</strong>
+    </div>
+
+    <div class="profile">
+      <div style="text-align:right">
+        <b>Academic Planner</b>
+        <div style="color:#9693a8;margin-top:4px">Student Workspace</div>
+      </div>
+      <div class="avatar">AI</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">✦ INTELLIGENT ACADEMIC PLANNING</div>
+
+      <h1>Your week, perfectly<br>planned with AI.</h1>
+
+      <p>
+        Generate a structured weekly timetable using Constraint
+        Satisfaction and Backtracking. Less manual work, more
+        organized learning.
+      </p>
+
+      <button class="primary-btn" onclick="generate()">
+        ✧ &nbsp; Generate Timetable &nbsp; ↗
+      </button>
+    </div>
+
+    <div class="hero-mark">✳</div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-icon purple">◈</div>
+      <div><small>Total Subjects</small><strong>06</strong></div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon blue">▦</div>
+      <div><small>Working Days</small><strong>05</strong></div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon green">◷</div>
+      <div><small>Weekly Lectures</small><strong>30</strong></div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-icon orange">✓</div>
+      <div><small>Lectures / Subject</small><strong>05</strong></div>
+    </div>
+  </div>
+
+  <section class="subjects-section" id="subjects" style="padding:0">
+    <div class="section-head">
+      <div>
+        <h2>Subjects & Faculty</h2>
+        <p>Your configured subjects and assigned teachers</p>
+      </div>
+    </div>
+
+    <div class="subject-grid" id="subjectGrid"></div>
+  </section>
+
+  <section id="generator" style="padding:0">
+    <div class="control-panel">
+      <div class="control-copy">
+        <strong>Smart Timetable Generator</strong>
+        <p>Generate a new schedule or export your current timetable.</p>
+      </div>
+
+      <div class="actions">
+        <button class="action-btn" onclick="downloadCSV()">
+          ↓ Export CSV
+        </button>
+
+        <button class="action-btn primary" onclick="generate()">
+          ✧ Generate / Regenerate
+        </button>
+      </div>
+    </div>
+
+    <div class="status">
+      <span class="dot"></span>
+      <span id="status">Ready to generate your timetable</span>
+    </div>
+
+    <div class="notice" id="notice"></div>
+  </section>
+
+  <section id="timetable" style="padding:0">
+    <div class="section-head">
+      <div>
+        <h2>Weekly Timetable</h2>
+        <p>Monday – Friday · Six periods daily</p>
+      </div>
+
+      <button class="action-btn no-print" onclick="window.print()">
+        ⤓ &nbsp; Print
+      </button>
+    </div>
+
+    <div class="table-box">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>TIME / DAY</th>
+              <th>MONDAY</th>
+              <th>TUESDAY</th>
+              <th>WEDNESDAY</th>
+              <th>THURSDAY</th>
+              <th>FRIDAY</th>
+            </tr>
+          </thead>
+
+          <tbody id="scheduleBody">
+            <tr>
+              <td colspan="6">
+                <div class="empty">
+                  ✧<br><br>
+                  Your timetable will appear here.<br>
+                  Click “Generate Timetable” to create your schedule.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    SchedulAI · AI-Based Automated Academic Scheduling System
+  </footer>
+
+</main>
+</div>
+
+<script>
+const days = [
+  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"
+];
+
+const slots = [
+  "09:00 – 10:00",
+  "10:00 – 11:00",
+  "11:15 – 12:15",
+  "12:15 – 01:15",
+  "02:00 – 03:00",
+  "03:00 – 04:00"
+];
+
+const subjects = [
+  {name:"Python", teacher:"Teacher A", icon:"Py", color:"c1"},
+  {name:"Mathematics", teacher:"Teacher B", icon:"∑", color:"c2"},
+  {name:"Database", teacher:"Teacher C", icon:"▤", color:"c3"},
+  {name:"Statistics", teacher:"Teacher D", icon:"▥", color:"c4"},
+  {name:"Artificial Intelligence", teacher:"Teacher A", icon:"✧", color:"c5"},
+  {name:"Computer Networks", teacher:"Teacher E", icon:"⌘", color:"c6"}
+];
+
+let currentSchedule = null;
+
+function renderSubjects() {
+  document.getElementById("subjectGrid").innerHTML =
+    subjects.map(s => `
+      <article class="subject">
+        <div class="subject-top">
+          <div class="subject-icon ${s.color}">${s.icon}</div>
+          <span class="count">5 lectures / week</span>
+        </div>
+
+        <h3>${s.name}</h3>
+        <p>Faculty: ${s.teacher}</p>
+
+        <div class="subject-footer">
+          <span>Weekly requirement</span>
+          <b>5 periods</b>
+        </div>
+      </article>
+    `).join("");
+}
+
+function generate() {
+  const schedule = Array.from(
+    {length:5}, () => Array(6).fill(-1)
+  );
+
+  const remaining = Array(6).fill(5);
+  let nodes = 0;
+
+  function backtrack(pos) {
+    if (pos === 30) return true;
+    if (++nodes > 200000) return false;
+
+    const day = Math.floor(pos / 6);
+    const period = pos % 6;
+
+    const candidates = subjects.map((_, i) => i)
+      .filter(i =>
+        remaining[i] > 0 &&
+        !schedule[day].includes(i)
+      );
+
+    for (let i = candidates.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [candidates[i], candidates[j]] =
+        [candidates[j], candidates[i]];
+    }
+
+    for (const subjectIndex of candidates) {
+      schedule[day][period] = subjectIndex;
+      remaining[subjectIndex]--;
+
+      if (backtrack(pos + 1)) return true;
+
+      remaining[subjectIndex]++;
+      schedule[day][period] = -1;
+    }
+
+    return false;
+  }
+
+  const status = document.getElementById("status");
+  const notice = document.getElementById("notice");
+
+  if (!backtrack(0)) {
+    status.textContent = "Unable to generate a schedule. Please try again.";
+    return;
+  }
+
+  currentSchedule = schedule;
+
+  document.getElementById("scheduleBody").innerHTML =
+    slots.map((slot, period) => {
+      const cells = days.map((day, dayIndex) => {
+        const subject = subjects[schedule[dayIndex][period]];
+
+        return `
+          <td>
+            <div class="lesson ${subject.color}">
+              <strong>${subject.name}</strong>
+              <small>${subject.teacher}</small>
+            </div>
+          </td>
+        `;
+      }).join("");
+
+      return `<tr><td>${slot}</td>${cells}</tr>`;
+    }).join("");
+
+  status.textContent =
+    "Timetable generated successfully · 30 periods assigned";
+
+  notice.style.display = "block";
+  notice.textContent =
+    "✓ All six subjects appear once per day, with five lectures per subject each week.";
+
+  document.getElementById("timetable").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function downloadCSV() {
+  if (!currentSchedule) {
+    alert("Please generate a timetable first.");
+    return;
+  }
+
+  const rows = [["Time", ...days]];
+
+  slots.forEach((slot, period) => {
+    rows.push([
+      slot,
+      ...days.map((day, dayIndex) => {
+        const subject =
+          subjects[currentSchedule[dayIndex][period]];
+
+        return subject.name + " (" + subject.teacher + ")";
+      })
+    ]);
+  });
+
+  const csv = rows.map(row =>
+    row.map(value =>
+      '"' + String(value).replace(/"/g, '""') + '"'
+    ).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob(
+    ["\uFEFF" + csv],
+    {type:"text/csv;charset=utf-8;"}
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "academic_timetable.csv";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+renderSubjects();
+</script>
+
+</body>
+</html>
